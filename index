@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .card { margin-bottom: 20px; }
+        .progress { height: 30px; }
+        .progress-bar { font-size: 16px; font-weight: bold; }
+        .btn-refresh { float: right; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="btn btn-outline-primary btn-refresh" onclick="loadData()" id="refreshBtn">🔄 Refresh Data</button>
+    <h2 class="mb-4">Celestia Event Admin Portal</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title text-secondary">Registration Progress (Goal: 300)</h5>
+            <div class="progress">
+                <div id="reg-progress" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0 / 300</div>
+            </div>
+            <p class="mt-2 text-muted fw-bold" id="reg-percentage">0% Registered</p>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">All Participants</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="beverage-tab" data-bs-toggle="tab" data-bs-target="#beverage" type="button" role="tab">Beverage Preference</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="pageant-tab" data-bs-toggle="tab" data-bs-target="#pageant" type="button" role="tab">Pageant Participation</button>
+        </li>
+    </ul>
+
+    <div class="tab-content border border-top-0 p-3 bg-white shadow-sm rounded-bottom" id="myTabContent">
+        
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
+            <div class="table-responsive mt-3">
+                <table class="table table-hover align-middle" id="all-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Pageant</th>
+                            <th>Beverage</th>
+                            <th>Payment Slip</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="text-center text-primary">Fetching live data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="beverage" role="tabpanel">
+            <ul class="nav nav-pills mt-3 mb-3" id="bevSubTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#alcoholic" type="button" role="tab">Alcoholic</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#non-alcoholic" type="button" role="tab">Non-Alcoholic</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="bevSubTabContent">
+                <div class="tab-pane fade show active" id="alcoholic" role="tabpanel">
+                     <table class="table table-striped" id="alcoholic-table"><thead><tr class="table-secondary"><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody></tbody></table>
+                </div>
+                <div class="tab-pane fade" id="non-alcoholic" role="tabpanel">
+                     <table class="table table-striped" id="non-alcoholic-table"><thead><tr class="table-secondary"><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="pageant" role="tabpanel">
+             <ul class="nav nav-pills mt-3 mb-3" id="pagSubTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#mr-celestia" type="button" role="tab">Mr. Celestia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#mrs-celestia" type="button" role="tab">Miss / Mrs. Celestia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#no-pageant" type="button" role="tab">Not Participating</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pagSubTabContent">
+                <div class="tab-pane fade show active" id="mr-celestia" role="tabpanel">
+                     <table class="table table-striped" id="mr-table"><thead><tr class="table-secondary"><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody></tbody></table>
+                </div>
+                <div class="tab-pane fade" id="mrs-celestia" role="tabpanel">
+                     <table class="table table-striped" id="mrs-table"><thead><tr class="table-secondary"><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody></tbody></table>
+                </div>
+                <div class="tab-pane fade" id="no-pageant" role="tabpanel">
+                     <table class="table table-striped" id="no-pag-table"><thead><tr class="table-secondary"><th>Name</th><th>Email</th><th>Action</th></tr></thead><tbody></tbody></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 👇 PASTE YOUR NEW GOOGLE APPS SCRIPT WEB APP URL HERE 👇
+    const API_URL = "YOUR_WEB_APP_URL_HERE"; 
+
+    document.addEventListener("DOMContentLoaded", loadData);
+
+    async function loadData() {
+        let btn = document.getElementById('refreshBtn');
+        btn.innerHTML = "⏳ Loading...";
+        btn.disabled = true;
+        
+        try {
+            // Fetch data from your Google Apps Script API
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            populatePortal(data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            alert("Failed to load data. Make sure your Apps Script is deployed as 'Anyone'.");
+            btn.innerHTML = "🔄 Refresh Data";
+            btn.disabled = false;
+        }
+    }
+
+    function generateRow(p, isFull) {
+        let proofBtn = p['Proof'] ? `<a href="${p['Proof']}" target="_blank" class="btn btn-sm btn-outline-primary">📄 Preview Slip</a>` : '<span class="text-danger small">No Slip</span>';
+        
+        if (isFull) {
+            return `<tr>
+                <td class="fw-medium">${p['Full Name'] || '-'}</td>
+                <td>${p['Email'] || '-'}</td>
+                <td><span class="badge bg-info text-dark">${p['Participate on'] || 'No'}</span></td>
+                <td><span class="badge bg-secondary">${p['Alcoholic Or Not'] || '-'}</span></td>
+                <td>${proofBtn}</td>
+            </tr>`;
+        } else {
+            return `<tr>
+                <td class="fw-medium">${p['Full Name'] || '-'}</td>
+                <td>${p['Email'] || '-'}</td>
+                <td>${proofBtn}</td>
+            </tr>`;
+        }
+    }
+
+    function populatePortal(data) {
+        document.getElementById('refreshBtn').innerHTML = "🔄 Refresh Data";
+        document.getElementById('refreshBtn').disabled = false;
+
+        // 1. Calculate Registration Percentage
+        let totalRegistrations = data.length;
+        let percentage = ((totalRegistrations / 300) * 100).toFixed(1);
+        
+        let progBar = document.getElementById('reg-progress');
+        progBar.style.width = percentage + '%';
+        progBar.innerText = `${totalRegistrations} / 300`;
+        document.getElementById('reg-percentage').innerText = `${percentage}% Registered of the 300 participant goal`;
+
+        // 2. Parse Rows into Tab Views
+        let allHtml = '', alcHtml = '', nonAlcHtml = '';
+        let mrHtml = '', mrsHtml = '', noPagHtml = '';
+
+        data.forEach(p => {
+            let rowFull = generateRow(p, true);
+            let rowSimp = generateRow(p, false);
+            
+            allHtml += rowFull;
+
+            let alc = p['Alcoholic Or Not'] || '';
+            if (alc.toLowerCase().includes('non')) nonAlcHtml += rowSimp;
+            else if (alc.toLowerCase().includes('alcoholic')) alcHtml += rowSimp;
+
+            let pag = p['Participate on'] || '';
+            if (pag.toLowerCase().includes('mr.')) mrHtml += rowSimp;
+            else if (pag.toLowerCase().includes('miss') || pag.toLowerCase().includes('mrs')) mrsHtml += rowSimp;
+            else noPagHtml += rowSimp;
+        });
+
+        // Inject into UI
+        document.querySelector('#all-table tbody').innerHTML = allHtml || '<tr><td colspan="5" class="text-center">No records found.</td></tr>';
+        document.querySelector('#alcoholic-table tbody').innerHTML = alcHtml || '<tr><td colspan="3" class="text-center">No records found.</td></tr>';
+        document.querySelector('#non-alcoholic-table tbody').innerHTML = nonAlcHtml || '<tr><td colspan="3" class="text-center">No records found.</td></tr>';
+        document.querySelector('#mr-table tbody').innerHTML = mrHtml || '<tr><td colspan="3" class="text-center">No records found.</td></tr>';
+        document.querySelector('#mrs-table tbody').innerHTML = mrsHtml || '<tr><td colspan="3" class="text-center">No records found.</td></tr>';
+        document.querySelector('#no-pag-table tbody').innerHTML = noPagHtml || '<tr><td colspan="3" class="text-center">No records found.</td></tr>';
+    }
+</script>
+</body>
+</html>
